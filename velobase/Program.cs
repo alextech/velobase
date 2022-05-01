@@ -7,9 +7,6 @@ using String = System.String;
 
 const String FILE_PATH = "C:\\devel\\velobase\\test.dat";
 
-// byte[] data = new byte[20];
-// writer.WriteTableData(table, data, FILE_PATH);
-
 WriteSampleData();
 
 using (FileStream stream = new FileStream(FILE_PATH, FileMode.Open))
@@ -33,13 +30,31 @@ using (FileStream stream = new FileStream(FILE_PATH, FileMode.Open))
 
 void WriteSampleData()
 {
+    // CREATE TABLE()
     Table table = new Table();
     table.AddField(new Integer());
     table.AddField(new Integer());
     table.AddField(new Storage.Schema.String());
     table.AddField(new Integer());
 
-    Writer writer = new Writer();
-    writer.WriteTableSchema(table, FILE_PATH);
+    Writer writer = new Writer(table, FILE_PATH);
+    writer.WriteTableSchema();
 
+    // SQL
+    // begin transaction
+    // INSERT INTO tbl_name VALUES('val1', 'val2');
+    writer.BeginWritingRow();
+
+        writer.WriteValue(5);
+        writer.WriteValue(6);
+        writer.WriteValue("Some text");
+        writer.WriteValue(7);
+
+    // write to disk
+    writer.CommitRow();
+
+
+
+    
+    // INSERT INTO tbl_name('col1', 'col2') VALUES('val1', 'val2');
 }

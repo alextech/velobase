@@ -3,4 +3,5 @@
 public interface IField
 {
     public byte DbType { get; }
+    public int Size { get; }
 }
