@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "velobase", "velobase\velobase.csproj", "{F6FBB2F2-BE6C-4C37-91E9-1E988EA8E72B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "Storage\Storage.csproj", "{0B36828A-CFB0-451C-A953-23DFA51CB528}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{F6FBB2F2-BE6C-4C37-91E9-1E988EA8E72B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6FBB2F2-BE6C-4C37-91E9-1E988EA8E72B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6FBB2F2-BE6C-4C37-91E9-1E988EA8E72B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B36828A-CFB0-451C-A953-23DFA51CB528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B36828A-CFB0-451C-A953-23DFA51CB528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B36828A-CFB0-451C-A953-23DFA51CB528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B36828A-CFB0-451C-A953-23DFA51CB528}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
