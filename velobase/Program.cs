@@ -34,7 +34,7 @@ void WriteSampleData()
     Table table = new Table();
     table.AddField(new Integer());
     table.AddField(new Integer());
-    table.AddField(new Storage.Schema.String());
+    table.AddField(new Storage.Schema.Char());
     table.AddField(new Integer());
 
     Writer writer = new Writer(table, FILE_PATH);

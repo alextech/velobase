@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Storage.Schema;
-using String = Storage.Schema.String;
+using Char = Storage.Schema.Char;
 
 namespace Storage;
 
@@ -73,7 +73,7 @@ public class Writer
 
     public void WriteValue(string value)
     {
-        if (_fieldIterator.Current.GetType() != typeof(String))
+        if (_fieldIterator.Current.GetType() != typeof(Char))
         {
             throw new Exception($"Wrong value type being written to column at index {_currentFieldIndex}.");
         }
