@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Collections;
 using System.Text;
 using Storage;
 using Storage.Schema;
@@ -8,25 +9,13 @@ using String = System.String;
 const String FILE_PATH = "C:\\devel\\velobase\\test.dat";
 
 WriteSampleData();
+Reader reader = new Reader(FILE_PATH);
+// list of anonymous classes
+IEnumerable<IEnumerable<object>> rows = reader.FetchAllRows();
 
-using (FileStream stream = new FileStream(FILE_PATH, FileMode.Open))
-{
-    byte[] page = new byte[19];
-
-    stream.Read(page, 0, 19);
-
-    ushort val1 = BitConverter.ToUInt16(page, 0);
-    ushort val2 = BitConverter.ToUInt16(page, 2);
-    string val3 = Encoding.UTF8.GetString(page, 4, 9);
-    ushort val4 = BitConverter.ToUInt16(page, 13);
-    // float val5 = BitConverter.ToSingle(page, 15);
-    
-    Console.WriteLine(val1);
-    Console.WriteLine(val2);
-    Console.WriteLine(val3);
-    Console.WriteLine(val4);
-    // Console.WriteLine(val5);
-}
+// reader.FetchByPK(5);
+// reader.FetchByIndexId("index_name", 5);
+// SELECT * FROM FILE_PATH WHERE id = 5
 
 void WriteSampleData()
 {
@@ -49,6 +38,17 @@ void WriteSampleData()
         writer.WriteValue(6);
         writer.WriteValue("Some text");
         writer.WriteValue(7);
+
+    // write to disk
+    writer.CommitRow();
+    
+    
+    writer.BeginWritingRow();
+
+        writer.WriteValue(8);
+        writer.WriteValue(9);
+        writer.WriteValue("More text");
+        writer.WriteValue(10);
 
     // write to disk
     writer.CommitRow();

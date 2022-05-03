@@ -45,6 +45,8 @@ public class Writer
         using (BinaryWriter writer = new BinaryWriter(new FileStream(_filePath, FileMode.Append)))
         {
             writer.Write(_rowBytes);
+            
+            writer.Close();
         }
     }
 
