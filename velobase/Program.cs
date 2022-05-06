@@ -10,7 +10,6 @@ const String FILE_PATH = "C:\\devel\\velobase\\test.dat";
 
 WriteSampleData();
 Reader reader = new Reader(FILE_PATH);
-// list of anonymous classes
 IEnumerable<IEnumerable<object>> rows = reader.FetchAllRows();
 
 // reader.FetchByPK(5);

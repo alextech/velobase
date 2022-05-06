@@ -63,23 +63,13 @@ public class Reader
             while (stream.Read(rowBytes, 0, rowSize) > 0)
             {
                 List<object> rowData = new List<object>();
-                int currentRowIndex = 0;
+                int currentFieldIndex = 0;
                 // SELECT * 
                 foreach (IField field in _table.Fields)
                 {
-                    // move interpreters for values to field types
-                    if (field.GetType() == typeof(Integer))
-                    {
-                        rowData.Add(BitConverter.ToInt32(rowBytes, currentRowIndex));
-                    }
+                    rowData.Add(field.Decode(rowBytes, currentFieldIndex));
 
-                    if (field.GetType() == typeof(Char))
-                    {
-                        // trim null bytes
-                        rowData.Add(Encoding.UTF8.GetString(rowBytes, currentRowIndex, field.Size));
-                    }
-
-                    currentRowIndex += field.Size;
+                    currentFieldIndex += field.Size;
                 }
 
                 rows.Add(rowData);

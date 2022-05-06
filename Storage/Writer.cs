@@ -63,28 +63,17 @@ public class Writer
         _currentFieldIndex = 0;
     }
 
-    public void WriteValue(int value)
+    public void WriteValue(object value)
     {
-        if (_fieldIterator.Current.GetType() != typeof(Integer))
+        try
         {
-            throw new Exception($"Wrong value type being written to column at index {_currentFieldIndex}.");
+            WriteValue(_fieldIterator.Current.Encode(value));
         }
-
-        WriteValue(BitConverter.GetBytes(value));
-    }
-
-    public void WriteValue(string value)
-    {
-        if (_fieldIterator.Current.GetType() != typeof(Char))
+        catch (ArgumentException e)
         {
-            throw new Exception($"Wrong value type being written to column at index {_currentFieldIndex}.");
+            throw new ArgumentException($"Wrong value type being written to column at index {_currentFieldIndex}.", e);
         }
-
-        byte[] bval = new byte[_fieldIterator.Current.Size];
-        Encoding.UTF8.GetBytes(value, 0, value.Length, bval, 0);
-        WriteValue(bval);
     }
-
     private void WriteValue(byte[] value)
     {
         if (_rowBytes == null)
