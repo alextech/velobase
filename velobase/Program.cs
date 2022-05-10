@@ -27,8 +27,8 @@ foreach (IEnumerable<object> row in reader.FetchAllRows())
 {
     foreach (object field in row)
     {
-        // writer.WriteLine(field);
-        // break;
+        writer.WriteLine(field);
+        break;
     }
 }
 

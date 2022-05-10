@@ -56,7 +56,8 @@ public class Reader
         List<IField> fields = _table.Fields.ToList();
         int rowSize = fields.Sum(f => f.Size);
 
-        byte[] rowBytes = new byte[rowSize];
+        int pageSize = rowSize * _rowsPerPage;
+        byte[] page = new byte[pageSize];
         
         // 8192 = 8kb
         // rows per page 10
@@ -65,18 +66,21 @@ public class Reader
         {
             stream.Seek(dataOffset, SeekOrigin.Begin);
 
-            while (stream.Read(rowBytes, 0, rowSize) > 0)
+            while (stream.Read(page, 0, pageSize) > 0)
             {
                 int currentFieldOffset = 0;
 
-                List<object> rowData = new List<object>();
-                foreach (IField field in fields)
+                while (currentFieldOffset < pageSize)
                 {
-                    rowData.Add(field.Decode(rowBytes, currentFieldOffset));
-                    currentFieldOffset += field.Size;
+                    List<object> rowData = new List<object>();
+                    foreach (IField field in fields)
+                    {
+                        rowData.Add(field.Decode(page, currentFieldOffset));
+                        currentFieldOffset += field.Size;
+                    }
+                    
+                    yield return rowData;
                 }
-                
-                yield return rowData;
             }
             stream.Close();
             
