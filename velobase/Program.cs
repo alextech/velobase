@@ -32,6 +32,8 @@ foreach (IEnumerable<object> row in reader.FetchAllRows())
     }
 }
 
+writer.Close();
+
 return;
 
 // reader.FetchByPK(5);
