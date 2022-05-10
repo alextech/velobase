@@ -9,8 +9,11 @@ using velobase.SampleSales;
 using Char = Storage.Schema.Char;
 
 const string FILE_PATH = "C:/devel/velobase/test.dat";
+const string TMP_OUTPUT_PATH = "C:/devel/velobase/tmp.txt";
+
+
 const string SALES_RECORDS_DB_PATH = "C:/devel/velobase/sales_records.dat";
-const string SALES_RECORDS_CSV_PATH = "c:/devel/velobase/1000_Sales_Records.csv";
+const string SALES_RECORDS_CSV_PATH = "c:/devel/velobase/100000_Sales_Records.csv";
 
 // WriteSampleData();
 
@@ -18,12 +21,15 @@ const string SALES_RECORDS_CSV_PATH = "c:/devel/velobase/1000_Sales_Records.csv"
 
 
 Reader reader = new Reader(SALES_RECORDS_DB_PATH);
-IEnumerable<IEnumerable<object>> rows = reader.FetchAllRows();
-List<IEnumerable<object>> rowObjects = rows.ToList().ToList();
+StreamWriter writer = new StreamWriter(TMP_OUTPUT_PATH);
 
-foreach (var rowObject in rowObjects)
+foreach (IEnumerable<object> row in reader.FetchAllRows())
 {
-    Console.WriteLine(rowObject.ToList()[0]);
+    foreach (object field in row)
+    {
+        // writer.WriteLine(field);
+        // break;
+    }
 }
 
 return;

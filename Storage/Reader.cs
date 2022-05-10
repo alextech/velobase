@@ -9,6 +9,7 @@ public class Reader
 {
     private readonly string _filePath;
     private Table? _table;
+    private int _rowsPerPage = 10;
 
     public Reader(string filePath)
     {
@@ -52,34 +53,35 @@ public class Reader
 
         int dataOffset = 1 + _table!.NumFields;
 
-        int rowSize = _table.Fields.Sum(f => f.Size);
-        byte[] rowBytes = new byte[rowSize];
+        List<IField> fields = _table.Fields.ToList();
+        int rowSize = fields.Sum(f => f.Size);
 
-        List<List<object>> rows = new List<List<object>>();
+        byte[] rowBytes = new byte[rowSize];
+        
+        // 8192 = 8kb
+        // rows per page 10
+
         using (FileStream stream = new FileStream(_filePath, FileMode.Open))
         {
             stream.Seek(dataOffset, SeekOrigin.Begin);
 
             while (stream.Read(rowBytes, 0, rowSize) > 0)
             {
+                int currentFieldOffset = 0;
+
                 List<object> rowData = new List<object>();
-                int currentFieldIndex = 0;
-                // SELECT * 
-                foreach (IField field in _table.Fields)
+                foreach (IField field in fields)
                 {
-                    rowData.Add(field.Decode(rowBytes, currentFieldIndex));
-
-                    currentFieldIndex += field.Size;
+                    rowData.Add(field.Decode(rowBytes, currentFieldOffset));
+                    currentFieldOffset += field.Size;
                 }
-
-                rows.Add(rowData);
+                
+                yield return rowData;
             }
             stream.Close();
             
             // assume that end of file is end of fixed size data
 
         }
-
-        return rows;
     }
 }
