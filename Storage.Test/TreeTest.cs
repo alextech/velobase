@@ -30,6 +30,9 @@ public class TreeTest
         
         int? result = tree.Search(47);
         Assert.AreEqual(47, result);
+        
+        result = tree.Search(44);
+        Assert.AreEqual(44, result);
     }
     
     [Test]
@@ -94,8 +97,10 @@ public class TreeTest
         
         Assert.AreEqual(24, left.Keys.ElementAt(0));
         Assert.AreEqual(35, left.Keys.ElementAt(1));
+        Assert.AreEqual(15, left.Children.First().Keys.First());
         
         Assert.AreEqual(47, right.Keys.ElementAt(0));
+        Assert.AreEqual(44, right.Children.First().Keys.First());
     }
     
     [Test]

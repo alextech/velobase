@@ -125,22 +125,22 @@ public class BranchNode : Node
 {
     public List<Node> Children { get; init; } = new List<Node>(Order + 1);
 
-    public void Insert(Node branch)
+    public void Insert(Node node)
     {
         if (IsFull)
         {
-            throw new Exception("Trying to insert into full branch node");
+            throw new Exception("Trying to insert into full node node");
         }
         
-        branch.Parent = this;
+        node.Parent = this;
         if (Children.Count == 0)
         {
-            Children.Add(branch);
+            Children.Add(node);
             return;
         }
         
         int i = 0;
-        int branchKey = branch.Keys.First();
+        int branchKey = node is BranchNode branch ? branch.Children.First().Keys.First() : node.Keys.First();
         for (; i < Keys.Count; i++)
         {
             if (branchKey > Keys[i]) continue;
@@ -149,7 +149,7 @@ public class BranchNode : Node
         }
         
         Keys.Insert(i, branchKey);
-        Children.Insert(i+1, branch);
+        Children.Insert(i+1, node);
     }
 
     public (BranchNode left, BranchNode right) Split()
@@ -161,7 +161,7 @@ public class BranchNode : Node
         };
         
         Keys.RemoveRange(SplitIndex, Order - SplitIndex);
-        Children.RemoveRange(SplitIndex, Order - SplitIndex);
+        Children.RemoveRange(SplitIndex + 1, Order - SplitIndex);
 
         return (this, rightNode);
     }
