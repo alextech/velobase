@@ -1,10 +1,15 @@
 ﻿namespace Storage;
 
-public class Node
+public abstract class Node
 {
-    public List<int> Keys { get; init; } = new List<int>();
-    public List<Node>? Children { get; init; }
-    public bool IsLeaf => Children == null;
+    public static int Order = 4;
+    public static int SplitIndex = 2;
+    public List<int> Keys { get; init; } = new List<int>(Node.Order);
+
+    public bool IsFull => Keys.Count == Order;
+    public BranchNode? Parent;
+
+    public bool IsRoot => Parent is null; 
 
     public int? FindValue(int value)
     {
@@ -19,12 +24,7 @@ public class Node
 
 public class Tree
 {
-    private readonly Node _root;
-
-    public Tree(Node root)
-    {
-        _root = root;
-    }
+    internal Node RootNode = new LeafNode();
 
     public int? Search(int value)
     {
@@ -32,20 +32,137 @@ public class Tree
         return leafNode.FindValue(value);
     }
 
-    private Node FindLeaf(int value)
+    private LeafNode FindLeaf(int value)
     {
-        Node currentNode = _root;
-        while (!currentNode.IsLeaf)
+        Node currentNode = RootNode;
+        while (currentNode is BranchNode node)
         {
             int i = 0;
-            for (; i < currentNode.Keys.Count; i++)
+            for (; i < node.Keys.Count; i++)
             {
-                if (value < currentNode.Keys[i]) break;
+                if (value < node.Keys[i]) break;
             }
 
-            currentNode = currentNode.Children![i];
+            currentNode = node.Children[i];
         }
 
-        return currentNode;
+        return (LeafNode)currentNode;
+    }
+
+
+    public void Insert(int value)
+    {
+        LeafNode target = FindLeaf(value);
+        if (target.IsFull)
+        {
+            (LeafNode left, LeafNode right) = target.Split();
+            if (target.IsRoot)
+            {
+                BranchNode newRoot = new BranchNode();
+                newRoot.Insert(left);
+                newRoot.Insert(right);
+
+                RootNode = newRoot;
+            }
+            else
+            {
+                BranchNode targetParent = target.Parent!;
+                while (targetParent.IsFull)
+                {
+                    (BranchNode leftBranch, BranchNode rightBranch) = targetParent.Split();
+                    if (targetParent.IsRoot)
+                    {
+                        BranchNode newRoot = new BranchNode();
+                        newRoot.Insert(leftBranch);
+                        newRoot.Insert(rightBranch);
+
+                        RootNode = newRoot;
+                    }
+
+                    targetParent = right.Keys.First() < rightBranch.Keys.First() ? leftBranch : rightBranch;
+                }
+                
+                targetParent.Insert(right);
+            }
+            target = value < right.Keys.First() ? left : right;
+        }
+        target.Insert(value);
+    }
+}
+
+public class LeafNode : Node
+{
+    public void Insert(int value)
+    {
+        if (IsFull)
+        {
+            throw new Exception("Trying to insert into full leaf node");
+        }
+        int i = 0;
+        for (; i < Keys.Count; i++)
+        {
+            if (value > Keys[i]) continue;
+
+            break;
+        }
+        
+        Keys.Insert(i, value);
+    }
+
+    public (LeafNode left, LeafNode right) Split()
+    {
+        LeafNode right = new LeafNode()
+        {
+            Keys = Keys.GetRange(SplitIndex, Order - SplitIndex)
+        };
+        
+        Keys.RemoveRange(SplitIndex, Order - SplitIndex);
+        return (this, right);
+    }
+}
+
+public class BranchNode : Node
+{
+    public List<Node> Children { get; init; } = new List<Node>(Order + 1);
+
+    public void Insert(Node branch)
+    {
+        if (IsFull)
+        {
+            throw new Exception("Trying to insert into full branch node");
+        }
+        
+        branch.Parent = this;
+        if (Children.Count == 0)
+        {
+            Children.Add(branch);
+            return;
+        }
+        
+        int i = 0;
+        int branchKey = branch.Keys.First();
+        for (; i < Keys.Count; i++)
+        {
+            if (branchKey > Keys[i]) continue;
+
+            break;
+        }
+        
+        Keys.Insert(i, branchKey);
+        Children.Insert(i+1, branch);
+    }
+
+    public (BranchNode left, BranchNode right) Split()
+    {
+        BranchNode rightNode = new BranchNode()
+        {
+            Keys = Keys.GetRange(SplitIndex + 1, Order - SplitIndex - 1),
+            Children = Children.GetRange(SplitIndex + 1, Order - SplitIndex),
+        };
+        
+        Keys.RemoveRange(SplitIndex, Order - SplitIndex);
+        Children.RemoveRange(SplitIndex, Order - SplitIndex);
+
+        return (this, rightNode);
     }
 }

@@ -4,143 +4,192 @@ namespace Storage.Test;
 
 public class TreeTest
 {
-    private Tree _tree;
-
-    [SetUp]
-    public void Setup()
-    {
-        _tree = new Tree(new Node
-        {
-            Keys = new List<int>() { 24, 40 },
-            Children = new List<Node>()
-            {
-                new Node()
-                {
-                    Keys = new List<int>() { 8, 15 },
-                    Children = new List<Node>()
-                    {
-                        new Node() { Keys = new List<int>(4) { 2, 4, 7 } },
-                        new Node() { Keys = new List<int>(4) { 8, 11, 13 } },
-                        new Node() { Keys = new List<int>(4) { 15, 17, 21 } },
-                    }
-                },
-                new Node()
-                {
-                    Keys = new List<int>() { 31, 35 },
-                    Children = new List<Node>()
-                    {
-                        new Node() { Keys = new List<int>(4) { 24, 26, 27 } },
-                        new Node() { Keys = new List<int>(4) { 31, 33, 34 } },
-                        new Node() { Keys = new List<int>(4) { 35, 37, 39 } },
-                    }
-                },
-                new Node()
-                {
-                    Keys = new List<int>() { 47, 51, 55 },
-                    Children = new List<Node>()
-                    {
-                        new Node() { Keys = new List<int>() { 40, 44, 45 } },
-                        new Node() { Keys = new List<int>() { 47, 48, 50 } },
-                        new Node() { Keys = new List<int>() { 51, 52, 53 } },
-                        new Node() { Keys = new List<int>() { 55, 57, 58 } },
-                    }
-                }
-            }
-        });
-    }
 
     [Test]
     public void SearchTest()
     {
-        int? result = _tree.Search(47);
+        Tree tree = new Tree();
+        tree.Insert(8);
+        tree.Insert(15);
+        tree.Insert(24);
+        tree.Insert(31);
+        tree.Insert(35);
+        tree.Insert(40);
+        tree.Insert(44);
+        tree.Insert(45);
+        tree.Insert(47);
+        tree.Insert(48);
+        tree.Insert(50);
+        tree.Insert(51);
+        tree.Insert(52);
+        tree.Insert(53);
+        tree.Insert(55);
+        tree.Insert(57);
+        tree.Insert(58);
+        
+        
+        int? result = tree.Search(47);
         Assert.AreEqual(47, result);
     }
-
-    // [Test]
-    // public void InsertUpToTest()
-    // {
-    //     Tree.Order = 3;
-    //     Tree.SplitIndex = 1;
-    //     
-    //     Node tree = new Node();
-    //
-    //     tree.Insert(34);
-    //     tree.Insert(24);
-    //     tree.Insert(31);
-    //
-    //     Assert.AreEqual(3, tree.Keys.Count);
-    //     Assert.AreEqual(24, tree.Keys.ElementAt(0));
-    //     Assert.AreEqual(31, tree.Keys.ElementAt(1));
-    //     Assert.AreEqual(34, tree.Keys.ElementAt(2));
-    // }
     
-    // [Test]
-    // public void InsertOverflowTest()
-    // {
-    //     Tree.Order = 3;
-    //     Tree.SplitIndex = 1;
-    //     
-    //     Node tree = new Node();
-    //
-    //     tree = tree.Insert(31);
-    //     tree = tree.Insert(24);
-    //     tree = tree.Insert(34);
-    //     tree = tree.Insert(11);
-    //     
-    //     Assert.AreEqual(1, tree.Keys.Count);
-    //     Assert.AreEqual(31, tree.Keys.ElementAt(0));
-    //     
-    //     Assert.NotNull(tree.Children);
-    //     Assert.AreEqual(2, tree.Children!.Count);
-    //
-    //     Node left = tree.Children.ElementAt(0);
-    //     Node right = tree.Children.ElementAt(1);
-    //     
-    //     Assert.AreEqual(2, left.Keys.Count);
-    //     Assert.AreEqual(2, right.Keys.Count);
-    //     
-    //     Assert.AreEqual(11, left.Keys.ElementAt(0));
-    //     Assert.AreEqual(24, left.Keys.ElementAt(1));
-    //     Assert.AreEqual(31, right.Keys.ElementAt(0));
-    //     Assert.AreEqual(34, right.Keys.ElementAt(1));
-    // }
-    //
-    // [Test]
-    // public void InsertOverFlowForthRank()
-    // {
-    //     Tree.Order = 4;
-    //     Tree.SplitIndex = 2;
-    //     
-    //     
-    //     Node tree = new Node();
-    //     
-    //     tree = tree.Insert(24);
-    //     tree = tree.Insert(25);
-    //     tree = tree.Insert(26);
-    //     tree = tree.Insert(27);
-    //     tree = tree.Insert(28);
-    //     tree = tree.Insert(29);
-    //     tree = tree.Insert(30);
-    //     
-    //     Assert.AreEqual(2, tree.Keys.Count);
-    //     Assert.AreEqual(26, tree.Keys.ElementAt(0));
-    //     Assert.AreEqual(28, tree.Keys.ElementAt(1));
-    //     
-    //     Assert.NotNull(tree.Children);;
-    //     Assert.AreEqual(3, tree.Children!.Count);
-    //
-    //     Node leaf_1 = tree.Children.ElementAt(0);
-    //     Node leaf_2 = tree.Children.ElementAt(1);
-    //     Node leaf_3 = tree.Children.ElementAt(2);
-    //
-    //     Assert.AreEqual(24, leaf_1.Keys.ElementAt(0));
-    //     Assert.AreEqual(25, leaf_1.Keys.ElementAt(1));
-    //     
-    //     Assert.AreEqual(26, leaf_2.Keys.ElementAt(0));
-    //     Assert.AreEqual(27, leaf_2.Keys.ElementAt(1));
-    //     
-    //     Assert.AreEqual(28, leaf_3.Keys.ElementAt(0));
-    //     Assert.AreEqual(29, leaf_3.Keys.ElementAt(1));
-    //     Assert.AreEqual(30, leaf_3.Keys.ElementAt(2));
-    // }
+    [Test]
+    public void InsertIntoLeafNodeTest()
+    {
+        Node.Order = 3;
+        LeafNode node = new LeafNode();
+        node.Insert(34);
+        node.Insert(24);
+        Assert.IsFalse(node.IsFull);
+        
+        node.Insert(31);
+        
+        Assert.AreEqual(24, node.Keys[0]);
+        Assert.AreEqual(31, node.Keys[1]);
+        Assert.AreEqual(34, node.Keys[2]);
+        
+        Assert.IsTrue(node.IsFull);
+    }
+    
+    [Test]
+    public void SplitLeafNodeTest()
+    {
+        Node.Order = 4;
+        Node.SplitIndex = 2;
+        LeafNode node = new LeafNode();
+    
+        node.Insert(10);
+        node.Insert(20);
+        node.Insert(30);
+        node.Insert(40);
+        
+        (Node left, Node right) = node.Split();
+        Assert.AreEqual(2, left.Keys.Count);
+        Assert.AreEqual(2, right.Keys.Count);
+        
+        Assert.AreEqual(10, left.Keys.ElementAt(0));
+        Assert.AreEqual(20, left.Keys.ElementAt(1));
+        
+        Assert.AreEqual(30, right.Keys.ElementAt(0));
+        Assert.AreEqual(40, right.Keys.ElementAt(1));
+        
+    }
+
+    [Test]
+    public void SplitBranchNodeTest()
+    {
+        Node.Order = 4;
+        Node.SplitIndex = 2;
+        BranchNode node = new BranchNode();
+        node.Insert(new LeafNode() { Keys = new List<int>() {15}});
+        node.Insert(new LeafNode() { Keys = new List<int>() {24}});
+        node.Insert(new LeafNode() { Keys = new List<int>() {35}});
+        node.Insert(new LeafNode() { Keys = new List<int>() {44}});
+        node.Insert(new LeafNode() { Keys = new List<int>() {47}});
+
+        (BranchNode left, BranchNode right) = node.Split();
+        Assert.AreEqual(2, left.Keys.Count);
+        Assert.AreEqual(1, right.Keys.Count);
+        Assert.AreEqual(3, left.Children.Count);
+        Assert.AreEqual(2, right.Children.Count);
+        
+        Assert.AreEqual(24, left.Keys.ElementAt(0));
+        Assert.AreEqual(35, left.Keys.ElementAt(1));
+        
+        Assert.AreEqual(47, right.Keys.ElementAt(0));
+    }
+    
+    [Test]
+    public void InsertUpToTest()
+    {
+        Tree tree = new Tree();
+    
+        tree.Insert(34);
+        tree.Insert(24);
+        tree.Insert(31);
+    
+        Node treeRoot = tree.RootNode;
+        
+        Assert.AreEqual(3, treeRoot.Keys.Count);
+        Assert.AreEqual(24, treeRoot.Keys.ElementAt(0));
+        Assert.AreEqual(31, treeRoot.Keys.ElementAt(1));
+        Assert.AreEqual(34, treeRoot.Keys.ElementAt(2));
+    }
+    
+    [Test]
+    public void InsertRootOverflowTest()
+    {
+        Node.Order = 4;
+        Node.SplitIndex = 2;
+        Tree tree = new Tree();
+    
+        tree.Insert(10);
+        tree.Insert(20);
+        tree.Insert(30);
+        tree.Insert(40);
+        
+        tree.Insert(25);
+        
+        
+        Assert.AreEqual(1, tree.RootNode.Keys.Count);
+        Assert.AreEqual(30, tree.RootNode.Keys.ElementAt(0));
+        
+        Assert.IsInstanceOf<BranchNode>(tree.RootNode);
+        BranchNode root = (tree.RootNode as BranchNode)!;
+        Assert.AreEqual(2, root.Children.Count);
+    
+        Node left = root.Children.ElementAt(0);
+        Node right = root.Children.ElementAt(1);
+        
+        Assert.AreEqual(3, left.Keys.Count);
+        Assert.AreEqual(2, right.Keys.Count);
+
+        Assert.AreEqual(10, left.Keys.ElementAt(0));
+        Assert.AreEqual(20, left.Keys.ElementAt(1));
+        Assert.AreEqual(25, left.Keys.ElementAt(2));
+        Assert.AreEqual(30, right.Keys.ElementAt(0));
+        Assert.AreEqual(40, right.Keys.ElementAt(1));
+    }
+
+    [Test]
+    public void InsertLeafOverflowTest()
+    {
+        Node.Order = 4;
+        Node.SplitIndex = 2;
+        Tree tree = new Tree();
+    
+        tree.Insert(10);
+        tree.Insert(20);
+        tree.Insert(30);
+        tree.Insert(40);
+        tree.Insert(35); 
+        tree.Insert(50);
+        tree.Insert(55); // force imbalance towards right, so it fills up and needs to be split
+        
+        
+        Assert.AreEqual(2, tree.RootNode.Keys.Count);
+        Assert.AreEqual(30, tree.RootNode.Keys.ElementAt(0));
+        Assert.AreEqual(40, tree.RootNode.Keys.ElementAt(1));
+        
+        Assert.IsInstanceOf<BranchNode>(tree.RootNode);
+        BranchNode root = (tree.RootNode as BranchNode)!;
+        Assert.AreEqual(3, root.Children.Count);
+    
+        Node firstChild = root.Children.ElementAt(0);
+        Node secondChild = root.Children.ElementAt(1);
+        Node thirdChild = root.Children.ElementAt(2);
+        
+        Assert.AreEqual(2, firstChild.Keys.Count);
+        Assert.AreEqual(2, secondChild.Keys.Count);
+        Assert.AreEqual(3, thirdChild.Keys.Count);
+
+        Assert.AreEqual(10, firstChild.Keys.ElementAt(0));
+        Assert.AreEqual(20, firstChild.Keys.ElementAt(1));
+        Assert.AreEqual(30, secondChild.Keys.ElementAt(0));
+        Assert.AreEqual(35, secondChild.Keys.ElementAt(1));
+        Assert.AreEqual(40, thirdChild.Keys.ElementAt(0));
+        Assert.AreEqual(50, thirdChild.Keys.ElementAt(1));
+        Assert.AreEqual(55, thirdChild.Keys.ElementAt(2));
+        
+    }
+    
 }
