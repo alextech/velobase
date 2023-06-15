@@ -196,5 +196,55 @@ public class TreeTest
         Assert.AreEqual(55, thirdChild.Keys.ElementAt(2));
         
     }
+
+    [Test]
+    public void OptimizeBranchNode()
+    {
+        BranchNode branchNode = new BranchNode();
+        branchNode.Keys.Add(10);
+        branchNode.Keys.Add(20);
+
+        LeafNode leftLeaf = new LeafNode();
+        leftLeaf.Keys.Add(10);
+        LeafNode rightLeaf = new LeafNode();
+        rightLeaf.Keys.Add(20);
+
+        // === Act ====
+        branchNode.Optimize();
+        
+        Assert.AreEqual(1, branchNode.Keys.Count);
+        Assert.AreEqual(20, branchNode.Keys.ElementAt(0));
+        
+    }
+
+    [Test]
+    public void InsertOverflowTwoLevel()
+    {
+        Node.Order = 2;
+        Node.SplitIndex = 1;
+    
+        Tree tree = new Tree();
+        tree.Insert(10);
+        tree.Insert(20);
+        tree.Insert(30);
+        tree.Insert(40);
+        tree.Insert(35);
+        
+        BranchNode root = (tree.RootNode as BranchNode)!;
+        
+        BranchNode firstChild = (root.Children.ElementAt(0) as BranchNode)!;
+        BranchNode secondChild = (root.Children.ElementAt(1) as BranchNode)!;
+
+        Node firstLeaf = firstChild.Children.ElementAt(0);
+        Node secondLeaf = firstChild.Children.ElementAt(1);
+        Node thirdLeaf = secondChild.Children.ElementAt(0);
+        Node fourthLeaf = secondChild.Children.ElementAt(1);
+        
+        Assert.AreEqual(10, firstLeaf.Keys.ElementAt(0));
+        Assert.AreEqual(20, secondLeaf.Keys.ElementAt(0));
+        Assert.AreEqual(30, thirdLeaf.Keys.ElementAt(0));
+        Assert.AreEqual(35, fourthLeaf.Keys.ElementAt(0));
+        Assert.AreEqual(40, fourthLeaf.Keys.ElementAt(1));
+    }
     
 }

@@ -165,4 +165,9 @@ public class BranchNode : Node
 
         return (this, rightNode);
     }
+
+    public void Optimize()
+    {
+        throw new NotImplementedException();
+    }
 }
