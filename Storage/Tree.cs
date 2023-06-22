@@ -53,40 +53,12 @@ public class Tree
     public void Insert(int value)
     {
         LeafNode target = FindLeaf(value);
-        if (target.IsFull)
-        {
-            (LeafNode left, LeafNode right) = target.Split();
-            if (target.IsRoot)
-            {
-                BranchNode newRoot = new BranchNode();
-                newRoot.Insert(left);
-                newRoot.Insert(right);
-
-                RootNode = newRoot;
-            }
-            else
-            {
-                BranchNode targetParent = target.Parent!;
-                while (targetParent.IsFull)
-                {
-                    (BranchNode leftBranch, BranchNode rightBranch) = targetParent.Split();
-                    if (targetParent.IsRoot)
-                    {
-                        BranchNode newRoot = new BranchNode();
-                        newRoot.Insert(leftBranch);
-                        newRoot.Insert(rightBranch);
-
-                        RootNode = newRoot;
-                    }
-
-                    targetParent = right.Keys.First() < rightBranch.Keys.First() ? leftBranch : rightBranch;
-                }
-                
-                targetParent.Insert(right);
-            }
-            target = value < right.Keys.First() ? left : right;
-        }
         target.Insert(value);
+
+        if (!RootNode.IsRoot)
+        {
+            RootNode = RootNode.Parent!;
+        }
     }
 }
 
@@ -96,7 +68,20 @@ public class LeafNode : Node
     {
         if (IsFull)
         {
-            throw new Exception("Trying to insert into full leaf node");
+            (LeafNode left, LeafNode right) = Split();
+            if (IsRoot)
+            {
+                BranchNode newRoot = new BranchNode();
+                newRoot.Insert(left);
+                newRoot.Insert(right);
+            }
+            else
+            {
+                Parent!.Insert(right);
+            }
+            
+            right.Insert(value);
+            return;
         }
         int i = 0;
         for (; i < Keys.Count; i++)
@@ -129,7 +114,20 @@ public class BranchNode : Node
     {
         if (IsFull)
         {
-            throw new Exception("Trying to insert into full node node");
+            (BranchNode left, BranchNode right) = Split();
+            if (IsRoot)
+            {
+                BranchNode newParent = new BranchNode();
+                newParent.Insert(left);
+                newParent.Insert(right);
+            }
+            else
+            {
+                Parent!.Insert(right);
+            }
+            right.Insert(node);
+
+            return;
         }
         
         node.Parent = this;
@@ -166,8 +164,4 @@ public class BranchNode : Node
         return (this, rightNode);
     }
 
-    public void Optimize()
-    {
-        throw new NotImplementedException();
-    }
 }

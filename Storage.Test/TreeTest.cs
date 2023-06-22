@@ -198,26 +198,6 @@ public class TreeTest
     }
 
     [Test]
-    public void OptimizeBranchNode()
-    {
-        BranchNode branchNode = new BranchNode();
-        branchNode.Keys.Add(10);
-        branchNode.Keys.Add(20);
-
-        LeafNode leftLeaf = new LeafNode();
-        leftLeaf.Keys.Add(10);
-        LeafNode rightLeaf = new LeafNode();
-        rightLeaf.Keys.Add(20);
-
-        // === Act ====
-        branchNode.Optimize();
-        
-        Assert.AreEqual(1, branchNode.Keys.Count);
-        Assert.AreEqual(20, branchNode.Keys.ElementAt(0));
-        
-    }
-
-    [Test]
     public void InsertOverflowTwoLevel()
     {
         Node.Order = 2;
