@@ -227,4 +227,18 @@ public class TreeTest
         Assert.AreEqual(40, fourthLeaf.Keys.ElementAt(1));
     }
     
+    
+    
+    [Test]
+    public void DeleteWithMinimumRemainder()
+    {
+        LeafNode leaf = new LeafNode();
+        leaf.Insert(5);
+        leaf.Insert(10);
+
+        leaf.Delete(5);
+        
+        Assert.AreEqual(1, leaf.Keys.Count);
+        Assert.AreEqual(10, leaf.Keys.First());
+    }
 }

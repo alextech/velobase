@@ -94,7 +94,7 @@ public class LeafNode : Node
         Keys.Insert(i, value);
     }
 
-    public (LeafNode left, LeafNode right) Split()
+    internal (LeafNode left, LeafNode right) Split()
     {
         LeafNode right = new LeafNode()
         {
@@ -103,6 +103,19 @@ public class LeafNode : Node
         
         Keys.RemoveRange(SplitIndex, Order - SplitIndex);
         return (this, right);
+    }
+
+    public void Delete(int value)
+    {
+        int i = 0;
+        for (; i < Keys.Count; i++)
+        {
+            if (value > Keys[i]) continue;
+
+            break;
+        }
+        
+        Keys.RemoveAt(i);
     }
 }
 
