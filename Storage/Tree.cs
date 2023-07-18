@@ -79,8 +79,9 @@ public class LeafNode : Node
             {
                 Parent!.Insert(right);
             }
-            
-            right.Insert(value);
+
+            LeafNode target = value < left.Parent!.Keys.First() ? left : right;
+            target.Insert(value);
             return;
         }
         int i = 0;
