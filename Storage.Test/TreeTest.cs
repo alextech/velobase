@@ -4,7 +4,7 @@ namespace Storage.Test;
 
 public class TreeTest
 {
-    private Node? _tree;
+    private Tree? _tree;
 
     [SetUp]
     public void Setup()
@@ -14,7 +14,7 @@ public class TreeTest
             1, 2, 3
         });
 
-        _tree = new Node
+        _tree = new Tree(new Node
         {
             Keys = new List<int>() { 24, 40 },
             Children = new List<Node>()
@@ -51,13 +51,13 @@ public class TreeTest
                     }
                 }
             }
-        };
+        });
     }
 
     [Test]
     public void SearchTest()
     {
-        int? result = Tree.Search(47, _tree!);
+        int? result = _tree.Search(47);
         Assert.AreEqual(47, result);
     }
 

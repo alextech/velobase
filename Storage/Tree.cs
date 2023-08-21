@@ -8,5 +8,9 @@ public class Node
 
 public class Tree
 {
-    
+    private Node _root;
+    public Tree(Node treeSnapshot)
+    {
+        _root = treeSnapshot;
+    }
 }
