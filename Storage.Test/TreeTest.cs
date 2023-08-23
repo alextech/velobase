@@ -9,45 +9,40 @@ public class TreeTest
     [SetUp]
     public void Setup()
     {
-        LinkedList<int> list = new LinkedList<int>(new []
-        {
-            1, 2, 3
-        });
-
-        _tree = new Tree(new Node
+        _tree = new Tree(new BranchNode()
         {
             Keys = new List<int>() { 24, 40 },
             Children = new List<Node>()
             {
-                new Node()
+                new BranchNode()
                 {
                     Keys = new List<int>() { 8, 15 },
                     Children = new List<Node>()
                     {
-                        new Node() { Keys = new List<int>(4) { 2, 4, 7 } },
-                        new Node() { Keys = new List<int>(4) { 8, 11, 13 } },
-                        new Node() { Keys = new List<int>(4) { 15, 17, 21 } },
+                        new LeafNode() { Keys = new List<int>(4) { 2, 4, 7 } },
+                        new LeafNode() { Keys = new List<int>(4) { 8, 11, 13 } },
+                        new LeafNode() { Keys = new List<int>(4) { 15, 17, 21 } },
                     }
                 },
-                new Node()
+                new BranchNode()
                 {
                     Keys = new List<int>() { 31, 35 },
                     Children = new List<Node>()
                     {
-                        new Node() { Keys = new List<int>(4) { 24, 26, 27 } },
-                        new Node() { Keys = new List<int>(4) { 31, 33, 34 } },
-                        new Node() { Keys = new List<int>(4) { 35, 37, 39 } },
+                        new LeafNode() { Keys = new List<int>(4) { 24, 26, 27 } },
+                        new LeafNode() { Keys = new List<int>(4) { 31, 33, 34 } },
+                        new LeafNode() { Keys = new List<int>(4) { 35, 37, 39 } },
                     }
                 },
-                new Node()
+                new BranchNode()
                 {
                     Keys = new List<int>() { 47, 51, 55 },
                     Children = new List<Node>()
                     {
-                        new Node() { Keys = new List<int>() { 40, 44, 45 } },
-                        new Node() { Keys = new List<int>() { 47, 48, 50 } },
-                        new Node() { Keys = new List<int>() { 51, 52, 53 } },
-                        new Node() { Keys = new List<int>() { 55, 57, 58 } },
+                        new LeafNode() { Keys = new List<int>() { 40, 44, 45 } },
+                        new LeafNode() { Keys = new List<int>() { 47, 48, 50 } },
+                        new LeafNode() { Keys = new List<int>() { 51, 52, 53 } },
+                        new LeafNode() { Keys = new List<int>() { 55, 57, 58 } },
                     }
                 }
             }
@@ -60,6 +55,37 @@ public class TreeTest
         int? result = _tree.Search(47);
         Assert.AreEqual(47, result);
     }
+
+    [Test]
+    public void SearchLeafNodeTest()
+    {
+        LeafNode leafNode = new LeafNode() { Keys = new List<int>() { 47, 48, 50 } };
+        int? result = leafNode.Search(47);
+        Assert.NotNull(result);
+        Assert.AreEqual(47, result!.Value);
+    }
+    
+    [Test]
+    public void SearchBranchNodeTest()
+    {
+        BranchNode branchNode = new BranchNode()
+        {
+            Keys = new List<int>() { 47, 51, 55 },
+            Children = new List<Node>()
+            {
+                new LeafNode() { Keys = new List<int>() { 40, 44, 45 } },
+                new LeafNode() { Keys = new List<int>() { 47, 48, 50 } },
+                new LeafNode() { Keys = new List<int>() { 51, 52, 53 } },
+                new LeafNode() { Keys = new List<int>() { 55, 57, 58 } },
+            }
+        };
+        
+        int? result = branchNode.Search(47);
+        Assert.NotNull(result);
+        Assert.AreEqual(47, result!.Value);
+    }
+    
+    
 
     // [Test]
     // public void InsertUpToTest()
